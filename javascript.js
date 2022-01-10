@@ -14,6 +14,30 @@ function computerPlay() {
   return computerChoice;
 }
 
+
+
+
+//The following function  checks  if one player reached 5 points. In this case this player is the
+//overall winner which will be shown below the game board then.
+
+
+function checkEndOfGame() {
+    if (playerCount === 5) {
+        gameoverDiv.firstElementChild.innerText = "You are the overall winner!";
+        gameoverDiv.style.display = 'flex'
+        gameBoard.style.visibility = "hidden";
+        playerCount = 0;
+        computerCount = 0;
+        } else if (computerCount === 5) {
+        gameoverDiv.firstElementChild.innerText = "The Computer is the overall winner!"
+        gameoverDiv.style.display = 'flex'
+        gameBoard.style.visibility = "hidden";
+        playerCount = 0;
+        computerCount = 0;
+    }
+  };
+
+
 //Each single round of the game will compare the computer selection and
 //the player selection.
 //It will return the information who of the two won the point for the current round.
@@ -26,9 +50,8 @@ function computerPlay() {
 //Paper wins over rock.
 //In case the selection is the same it is a draw.
 
-
-//The function also checks also if one player reached 5 points. In this case this player is the
-//overall winner which will be shown below the game board then.
+//The following function manages a single play round based on the above rules.
+//It also displays the round results to the player.
 
 function playRound(computerSelection, playerSelection) {
   let statement;
@@ -69,21 +92,18 @@ function playRound(computerSelection, playerSelection) {
       "\nComputer total points: " +
       computerCount;
 
-    if (playerCount === 5) {
-        gameoverDiv.firstElementChild.innerText = "You are the overall winner!";
-        gameoverDiv.style.display = 'flex'
-        gameBoard.style.visibility = "hidden";
-        playerCount = 0;
-        computerCount = 0;
-        } else if (computerCount === 5) {
-        gameoverDiv.firstElementChild.innerText = "The Computer is the overall winner!"
-        gameoverDiv.style.display = 'flex'
-        gameBoard.style.visibility = "hidden";
-        playerCount = 0;
-        computerCount = 0;
-    }
-  };
-  
+}
+
+// The function playGame is holding two parts. The first one calls the function to manage a single play round.
+// The second part checks if the game has ended after each player action.
+
+function playGame(computerSelection, playerSelection) {
+    playRound(computerSelection, playerSelection);
+    checkEndOfGame(playerCount, computerCount);
+
+};
+    
+ // The function startgame displays the game board and resets all counters and informational texts to zero/ empty. 
 
 function startgame() {
     gameBoard.style.visibility="visible";
@@ -93,11 +113,13 @@ function startgame() {
     resultDiv.innerText = "";
 };
 
-// game board consists of three buttons which will all perform the playRound Function when clicked.
+// The game board consists of three buttons which will all perform the playGame function when clicked.
+
+
 
 buttons.forEach((button) => {
     button.addEventListener("click", () => {
-    playRound(computerPlay(), button.id);
+    playGame(computerPlay(), button.id);
     })
 });
 
